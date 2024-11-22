@@ -20,7 +20,7 @@ const WeatherDisplay: React.FC<WeatherProps> = ({ weather }) => {
       case 'few clouds':
       case 'scattered clouds':
       case 'broken clouds':
-        return <Cloud className="h-6 w-6 text-gray-400" />
+        return <Cloud className="h-6 w-6 text-blue-300" />
       case 'rain':
       case 'shower rain':
       case 'thunderstorm':
@@ -33,16 +33,28 @@ const WeatherDisplay: React.FC<WeatherProps> = ({ weather }) => {
   }
 
   return (
-    <div className="flex items-center space-x-4 text-sm">
-      <div className="flex items-center">
+    <div className="glass-card px-6 py-3 inline-flex items-center space-x-6 text-sm">
+      <div className="flex items-center space-x-2">
         {getWeatherIcon(weather.status || '')}
+        <span className="font-medium">{weather.status}</span>
       </div>
-      <div>
-        <span className="font-semibold">{weather.high_temp}°</span> / <span>{weather.low_temp}°</span>
+      <div className="flex items-center space-x-2">
+        <span className="font-semibold text-[var(--accent-1)]">{Math.round(weather.high_temp ?? 0)}°</span>
+        <span className="text-[var(--text-secondary)]">/</span>
+        <span className="text-[var(--text-secondary)]">{Math.round(weather.low_temp ?? 0)}°</span>
       </div>
-      <div>{weather.date}</div>
+      <div className="text-[var(--text-secondary)]">
+        {weather.date 
+          ? new Date(weather.date).toLocaleDateString('en-US', { 
+              month: 'long', 
+              day: 'numeric', 
+              year: 'numeric' 
+            }) 
+          : 'Invalid date'}
+      </div>
     </div>
   )
 }
 
 export default WeatherDisplay
+

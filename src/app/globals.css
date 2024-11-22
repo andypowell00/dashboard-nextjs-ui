@@ -5,32 +5,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #121212;
-  --foreground: #e0e0e0;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--background);
-  color: var(--foreground);
+  --background: #0B0F19;
+  --card-background: rgba(17, 25, 40, 0.75);
+  --card-border: rgba(255, 255, 255, 0.125);
+  --primary: #4F46E5;
+  --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #FB7185 100%);
+  --secondary-gradient: linear-gradient(135deg, #FB7185 0%, #4F46E5 100%);
+  --accent-1: #FB7185;
+  --accent-2: #4F46E5;
+  --text-primary: #FFFFFF;
+  --text-secondary: #94A3B8;
 }
 
 @layer base {
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+
   body {
-    @apply antialiased;
+    @apply bg-[var(--background)] text-[var(--text-primary)] antialiased;
+    font-family: 'Inter', sans-serif;
   }
 }
 
 @layer components {
-  .card {
-    @apply bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300;
+  .glass-card {
+    @apply bg-[var(--card-background)] backdrop-blur-xl border border-[var(--card-border)] rounded-xl shadow-xl;
+  }
+  
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)];
   }
 
-  .card-title {
-    @apply text-lg font-semibold mb-2 text-gray-100 line-clamp-2;
+  .tab-active {
+    @apply relative text-[var(--accent-1)] before:absolute before:bottom-0 before:left-0 before:w-full before:h-0.5 before:bg-[var(--accent-1)];
   }
 
-  .card-body {
-    @apply text-sm text-gray-300 mt-2 line-clamp-3;
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
   }
 }
+
+.glass-effect {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+

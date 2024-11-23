@@ -5,7 +5,7 @@ import { connectToDatabase } from '@/lib/db';
 export async function GET() {
   try {
     const today = new Date().toISOString().slice(0, 10); // Get today's date (yyyy-mm-dd)
-
+    //console.log("date from route.ts:" + today);
     // Establish a connection to the MongoDB-based Cosmos DB
     const db = await connectToDatabase();
     const collection = db.collection(process.env.COSMOS_DB_CONTAINER_NAME as string);

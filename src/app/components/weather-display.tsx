@@ -1,5 +1,6 @@
 import React from 'react'
 import { Sun, Cloud, CloudRain, Snowflake } from 'lucide-react'
+import { parseISO, format } from 'date-fns'
 
 interface WeatherProps {
   weather: {
@@ -32,11 +33,20 @@ const WeatherDisplay: React.FC<WeatherProps> = ({ weather }) => {
     }
   }
 
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return 'Invalid date'
+    const date = parseISO(dateString)
+    
+    // Convert to New York time
+    const nyDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }))
+    
+    return format(nyDate, 'MMMM d, yyyy')
+  }
+ 
   return (
     <div className="glass-card px-6 py-3 inline-flex items-center space-x-6 text-sm">
       <div className="flex items-center space-x-2">
         {getWeatherIcon(weather.status || '')}
-        <span className="font-medium">{weather.status}</span>
       </div>
       <div className="flex items-center space-x-2">
         <span className="font-semibold text-[var(--accent-1)]">{Math.round(weather.high_temp ?? 0)}°</span>
@@ -44,13 +54,7 @@ const WeatherDisplay: React.FC<WeatherProps> = ({ weather }) => {
         <span className="text-[var(--text-secondary)]">{Math.round(weather.low_temp ?? 0)}°</span>
       </div>
       <div className="text-[var(--text-secondary)]">
-        {weather.date 
-          ? new Date(weather.date).toLocaleDateString('en-US', { 
-              month: 'long', 
-              day: 'numeric', 
-              year: 'numeric' 
-            }) 
-          : 'Invalid date'}
+        {formatDate(weather.date)}
       </div>
     </div>
   )

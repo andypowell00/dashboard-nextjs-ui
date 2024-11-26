@@ -6,7 +6,7 @@ import WeatherDisplay from '@/app/components/weather-display'
 
 interface Item {
   type: string
-  image_url?: string
+  image?: string
   title: string
   url?: string
   body?: string
@@ -17,6 +17,11 @@ interface Item {
   _id?: {
     $oid: string
   }
+  artist?: string
+  release_date?: string
+  summary?: string
+  thumbnail?: string
+  description?: string
 }
 
 export default function Dashboard() {
@@ -32,7 +37,10 @@ export default function Dashboard() {
           const data = await response.json()
           const weatherItem = data.find((item: Item) => item.type === 'weather')
           setWeatherData(weatherItem || null)
+          // Include all non-weather items, including 'album' and 'trailer' types
           setItems(data.filter((item: Item) => item.type !== 'weather'))
+          console.log('All fetched items:', data);
+          console.log('Filtered items:', items);
         } else {
           console.error(`Failed to fetch items. Status: ${response.status}`)
           setItems([])

@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react'
 import Card from '@/app/components/card'
+import MusicCard from '@/app/components/music-card'
+import MovieCard from '@/app/components/movie-card'
 
 interface Item {
   type: string
-  image_url?: string
+  image?: string
   title: string
   url?: string
   body?: string
@@ -16,6 +18,11 @@ interface Item {
   _id?: {
     $oid: string
   }
+  artist?: string
+  release_date?: string
+  summary?: string
+  thumbnail?: string
+  description?: string
 }
 
 interface DashboardTabsProps {
@@ -24,22 +31,46 @@ interface DashboardTabsProps {
 }
 
 export function DashboardTabs({ items, isLoading }: DashboardTabsProps) {
+  console.log('Items received in DashboardTabs:', items);
   const [activeTab, setActiveTab] = useState("reddit")
 
-  const filterItems = (type: string) => items.filter(item => item.type === type)
+  const filterItems = (type: string) => {
+    console.log('Filtering items for type:', type);
+    switch (type) {
+      case 'music':
+        const musicItems = items.filter(item => item.type === 'album');
+        console.log('Filtered music items:', musicItems);
+        return musicItems;
+      case 'movies':
+        const movieItems = items.filter(item => item.type === 'trailer');
+        console.log('Filtered movie items:', movieItems);
+        return movieItems;
+      default:
+        const defaultItems = items.filter(item => item.type === type);
+        console.log('Filtered default items:', defaultItems);
+        return defaultItems;
+    }
+  }
 
   const renderContent = (type: string) => {
     const filteredItems = filterItems(type)
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-        {filteredItems.map((item, index) => (
-          <Card key={item._id?.$oid || index} item={item} />
-        ))}
+        {filteredItems.map((item, index) => {
+          switch (type) {
+            case 'music':
+              return <MusicCard key={item._id?.$oid || index} item={item} />
+            case 'movies':
+              return <MovieCard key={item._id?.$oid || index} item={item} />
+            default:
+              return <Card key={item._id?.$oid || index} item={item} />
+          }
+        })}
       </div>
     )
   }
 
-  const tabs = ["reddit", "news", "concerts", "movies"]
+  const tabs = ["reddit", "news", "movies", "music"]
 
   return (
     <div className="w-full">

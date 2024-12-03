@@ -22,6 +22,14 @@ interface Item {
   summary?: string
   thumbnail?: string
   description?: string
+  location?: string
+  wind?: string
+  humidity?: string
+  visibility?: string
+  uvIndex?: number
+  sunrise?: string
+  sunset?: string
+  icon?: string
 }
 
 export default function Dashboard() {
@@ -35,10 +43,9 @@ export default function Dashboard() {
         const response = await fetch('/api/items')
         if (response.ok) {
           const data = await response.json()
-          const weatherItem = data.find((item: Item) => item.type === 'weather')
+          const weatherItem = data.find((item: Item) => item.type === 'weather');
           setWeatherData(weatherItem || null)
-          // Include all non-weather items, including 'album' and 'trailer' types
-          setItems(data.filter((item: Item) => item.type !== 'weather'))
+          setItems(data.filter((item: Item) => item.type !== 'weather'));
           console.log('All fetched items:', data);
           console.log('Filtered items:', items);
         } else {

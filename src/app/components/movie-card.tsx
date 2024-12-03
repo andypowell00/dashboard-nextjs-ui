@@ -37,7 +37,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ item }) => {
             {item.title}
           </a>
         </h3>
-        <p className="text-xs text-[var(--text-secondary)] mb-3">Release Date: {new Date(item.date).toLocaleDateString()}</p>
         <p className="text-sm text-[var(--text-secondary)] line-clamp-3">{item.description}</p>
       </div>
     </div>

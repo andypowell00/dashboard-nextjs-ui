@@ -1,14 +1,13 @@
 import React from 'react';
 import { Music } from 'lucide-react';
-import { cn } from "@/lib/utils"
 
 interface MusicItem {
-  image: string
+  thumbnail: string
   title: string
-  artist: string
-  release_date: string
-  summary: string
+  description: string
+  date: string
   type: string
+  url: string
 }
 
 interface MusicCardProps {
@@ -18,37 +17,27 @@ interface MusicCardProps {
 const MusicCard: React.FC<MusicCardProps> = ({ item }) => {
   return (
     <div className="glass-card card-hover overflow-hidden">
-      <div className="relative aspect-square max-h-[200px]">
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-1)] to-[var(--accent-2)] opacity-10" />
-        {item.image && (
+      <div className="relative h-48">
+        {item.thumbnail ? (
           <img 
-            src={item.image} 
-            alt={`${item.title} by ${item.artist}`}
-            className={cn(
-              "absolute inset-0 w-full h-full object-contain transition-all duration-300",
-              "hover:scale-110 group-hover:opacity-90"
-            )}
+            src={item.thumbnail} 
+            alt={item.title}
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
           />
-        )}
-        <div 
-          className={cn(
-            "absolute inset-0 bg-gradient-to-t from-[var(--card-background)]",
-            "via-transparent to-transparent opacity-90"
-          )}
-        />
-        {!item.image && (
-          <div className="absolute inset-0 flex items-center justify-center">
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--accent-1)] to-[var(--accent-2)] opacity-10">
             <Music className="h-16 w-16 text-white" />
           </div>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--card-background)] to-transparent" />
       </div>
-      <div className="p-4 bg-[var(--card-background)]">
-        <h3 className="text-lg font-semibold mb-0.5 line-clamp-1 hover:text-[var(--accent-1)] transition-colors duration-200">
-          {item.title}
+      <div className="p-5">
+        <h3 className="text-lg font-semibold mb-3 line-clamp-2 hover:text-[var(--accent-1)] transition-colors duration-200">
+          <a href={item.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            {item.title}
+          </a>
         </h3>
-        <p className="text-sm text-[var(--text-secondary)] mb-1">{item.artist}</p>
-        <p className="text-xs text-[var(--text-secondary)] mb-2">Release Date: {item.release_date}</p>
-        <p className="text-sm text-[var(--text-secondary)] line-clamp-3">{item.summary}</p>
+        <p className="text-sm text-[var(--text-secondary)] mb-1 line-clamp-2">{item.description}</p>
       </div>
     </div>
   )

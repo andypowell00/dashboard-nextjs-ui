@@ -17,13 +17,13 @@ async function fetchItems() {
 
   // Fetch latest 25 news items
   const newsItems = await collection.find({ type: 'news' })
-    .sort({ date: -1 })
+    .sort({ insertDate: -1 })
     .limit(25)
     .toArray();
 
   // Fetch latest 25 music items
   const musicItems = await collection.find({ type: 'music' })
-    .sort({ date: -1 })
+    .sort({ insertDate: -1 }) 
     .limit(25)
     .toArray();
 
@@ -52,7 +52,7 @@ const getCachedItems = unstable_cache(
   },
   ['items-cache'],
   //{ revalidate: 5 }
-  { revalidate: 86400 } // 24 hours in seconds, only hit DB once a day since the data does not change
+  { revalidate: 43200 } // 12 hours in seconds, to avoid pulling from db too often
 );
 
 export async function GET() {

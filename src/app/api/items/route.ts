@@ -60,6 +60,7 @@ export async function GET() {
     const items = await getCachedItems();
     return NextResponse.json(items);
   } catch (error: unknown) {
+    console.error("Error fetching items:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }

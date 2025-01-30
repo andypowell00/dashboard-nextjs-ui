@@ -4,7 +4,7 @@ import { unstable_cache } from 'next/cache';
 
 async function fetchItems() {
   const db = await connectToDatabase();
-  const collection = db.collection(process.env.COSMOS_DB_CONTAINER_NAME as string);
+  const collection = db.collection(process.env.DB_CONTAINER_NAME as string);
   
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];

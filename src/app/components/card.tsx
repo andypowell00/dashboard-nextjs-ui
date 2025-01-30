@@ -1,13 +1,6 @@
 import React from 'react'
 import { Newspaper, RssIcon as Reddit } from 'lucide-react'
-
-interface Item {
-  type: string
-  image_url?: string
-  thumbnail?: string
-  title: string
-  url?: string
-}
+import { Item } from '@/app/types/item';
 
 interface ItemProps {
   item: Item

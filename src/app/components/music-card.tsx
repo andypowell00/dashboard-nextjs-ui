@@ -2,12 +2,12 @@ import React from 'react';
 import { Music } from 'lucide-react';
 
 interface MusicItem {
-  thumbnail: string
+  thumbnail?: string
   title: string
-  description: string
-  date: string
+  description?: string
+  date?: string
   type: string
-  url: string
+  url?: string
 }
 
 interface MusicCardProps {

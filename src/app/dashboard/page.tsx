@@ -3,34 +3,9 @@
 import { useEffect, useState } from 'react'
 import { DashboardTabs } from '@/app/components/tabs'
 import WeatherDisplay from '@/app/components/weather-display'
+import { Item } from '@/app/types/item';
 
-interface Item {
-  type: string
-  image?: string
-  title: string
-  url?: string
-  body?: string
-  date?: string
-  high_temp?: number
-  low_temp?: number
-  status?: string
-  _id?: {
-    $oid: string
-  }
-  artist?: string
-  release_date?: string
-  summary?: string
-  thumbnail?: string
-  description?: string
-  location?: string
-  wind?: string
-  humidity?: string
-  visibility?: string
-  uvIndex?: number
-  sunrise?: string
-  sunset?: string
-  icon?: string
-}
+
 
 export default function Dashboard() {
   const [items, setItems] = useState<Item[]>([])
@@ -46,8 +21,6 @@ export default function Dashboard() {
           const weatherItem = data.find((item: Item) => item.type === 'weather');
           setWeatherData(weatherItem || null)
           setItems(data.filter((item: Item) => item.type !== 'weather'));
-          console.log('All fetched items:', data);
-          console.log('Filtered items:', items);
         } else {
           console.error(`Failed to fetch items. Status: ${response.status}`)
           setItems([])

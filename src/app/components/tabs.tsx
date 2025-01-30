@@ -4,21 +4,7 @@ import React, { useState } from 'react'
 import Card from '@/app/components/card'
 import MusicCard from '@/app/components/music-card'
 import MovieCard from '@/app/components/movie-card'
-
-interface Item {
-  type: string
-  thumbnail?: string
-  title: string
-  url: string
-  description?: string
-  date: string
-  high_temp?: number
-  low_temp?: number
-  status?: string
-  _id?: {
-    $oid: string
-  }
-}
+import { Item } from '@/app/types/item';
 
 interface DashboardTabsProps {
   items: Item[]

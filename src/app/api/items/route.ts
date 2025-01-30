@@ -52,7 +52,7 @@ const getCachedItems = unstable_cache(
   },
   ['items-cache'],
   //{ revalidate: 5 }
-  { revalidate: 43200 } // 12 hours in seconds, to avoid pulling from db too often
+  { revalidate: 36000 } 
 );
 
 export async function GET() {
@@ -60,9 +60,8 @@ export async function GET() {
     const items = await getCachedItems();
     return NextResponse.json(items);
   } catch (error: unknown) {
-    // Return a response with a 500 status and detailed error message
     return NextResponse.json(
-      { error: 'Failed to fetch items', details: error },
+      { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
   }

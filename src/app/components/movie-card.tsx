@@ -4,10 +4,10 @@ import { Film } from 'lucide-react'
 interface MovieItem {
   type: string  
   title: string
-  url: string
-  date: string
-  thumbnail: string
-  description: string
+  url?: string
+  date?: string
+  thumbnail?: string
+  description?: string
 }
 
 interface MovieCardProps {

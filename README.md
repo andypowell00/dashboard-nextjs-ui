@@ -1,4 +1,5 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This application serves as a UI for displaying various information from a DB such as weather, news articles etc.
 
 ## Getting Started
 

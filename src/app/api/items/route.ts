@@ -51,7 +51,7 @@ const getCachedItems = unstable_cache(
     return await fetchItems();
   },
   ['items-cache'],
-  { revalidate: 60 } 
+  { revalidate: 36000 } 
 );
 
 export async function GET() {

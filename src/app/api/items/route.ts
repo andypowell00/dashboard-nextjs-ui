@@ -3,9 +3,9 @@ import { connectToDatabase } from '@/lib/db';
 import { unstable_cache } from 'next/cache';
 
 async function fetchItems() {
+  console.log(`[${new Date().toISOString()}] Fetching from DB...`);
   const db = await connectToDatabase();
   const collection = db.collection(process.env.DB_CONTAINER_NAME as string);
-  
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
 
@@ -51,8 +51,7 @@ const getCachedItems = unstable_cache(
     return await fetchItems();
   },
   ['items-cache'],
-  //{ revalidate: 5 }
-  { revalidate: 36000 } 
+  { revalidate: 60 } 
 );
 
 export async function GET() {

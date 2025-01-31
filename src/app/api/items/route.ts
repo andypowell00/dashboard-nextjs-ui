@@ -3,7 +3,7 @@ import { connectToDatabase } from '@/lib/db';
 import { unstable_cache } from 'next/cache';
 
 async function fetchItems() {
-  console.log(`[${new Date().toISOString()}] Fetching from DB...`);
+  console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
   const db = await connectToDatabase();
   const collection = db.collection(process.env.DB_CONTAINER_NAME as string);
   const today = new Date();

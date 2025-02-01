@@ -1,6 +1,7 @@
 import React from 'react'
 import { Newspaper, RssIcon as Reddit } from 'lucide-react'
 import { Item } from '@/app/types/item';
+import Image from "next/image";
 
 interface ItemProps {
   item: Item
@@ -15,10 +16,11 @@ const Card: React.FC<ItemProps> = ({ item }) => {
     <div className="glass-card card-hover overflow-hidden">
       <div className="relative h-48">
         {(item.type === 'reddit' ? item.image_url : item.thumbnail) ? (
-          <img 
-            src={item.type === 'reddit' ? item.image_url : item.thumbnail} 
+          <Image 
+            src={item.type === 'reddit' ? item.image_url || "/fallback-image.jpg" : item.thumbnail || "/fallback-image.jpg"} 
+            fill
             alt={item.title} 
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" 
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110 rounded-lg" 
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--accent-1)] to-[var(--accent-2)] opacity-10">

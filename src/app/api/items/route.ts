@@ -27,13 +27,12 @@ async function fetchItems() {
     .limit(25)
     .toArray();
 
-  // Fetch trailer items for the current month
-  const trailerItems = await collection.find({
-    type: 'trailer',
-    date: {
-      $regex: `^${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}`
-    }
-  }).toArray();
+  // Fetch trailer items latest 30 trailers
+  const trailerItems = await collection.find({ type: 'trailer' })
+  .sort({ date: -1 })
+  .limit(30) 
+  .toArray();
+  
 
   // Combine all items
   const allItems = [
@@ -51,7 +50,7 @@ const getCachedItems = unstable_cache(
     return await fetchItems();
   },
   ['items-cache'],
-  { revalidate: 36000 } 
+  { revalidate: 86400 } 
 );
 
 export async function GET() {

@@ -19,6 +19,7 @@ const Card: React.FC<ItemProps> = ({ item }) => {
           <Image 
             src={item.type === 'reddit' ? item.image_url || "/fallback-image.jpg" : item.thumbnail || "/fallback-image.jpg"} 
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             alt={item.title} 
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-110 rounded-lg" 
           />

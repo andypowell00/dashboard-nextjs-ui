@@ -1,28 +1,26 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
+import { Item } from '@/app/types/item';
 
-// Cache variables at module scope
-let cachedItems: any[] | null = null;
+// Module-scoped cache variables using the imported Item interface.
+let cachedItems: Item[] | null = null;
 let cachedAt: number = 0;
+const CACHE_DURATION = 12 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-// Set cache duration to 24 hours (in milliseconds)
-const CACHE_DURATION = 12 * 60 * 60 * 1000; 
-
-async function fetchItems() {
+async function fetchItems(): Promise<Item[]> {
   console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
   const db = await connectToDatabase();
-  const collection = db.collection(process.env.DB_CONTAINER_NAME as string);
+
+  // Specify the type of documents in the collection with the generic.
+  const collection = db.collection<Item>(process.env.DB_CONTAINER_NAME as string);
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
 
-  // Fetch weather and reddit items
+  // Fetch weather and reddit items for today
   const weatherAndRedditItems = await collection.find({
     type: { $in: ['reddit', 'weather'] },
     date: todayString
   }).toArray();
-
-  // Log the count for debugging
-  console.log("Weather & Reddit items count:", weatherAndRedditItems.length);
 
   // Fetch latest 25 news items
   const newsItems = await collection.find({ type: 'news' })
@@ -32,7 +30,7 @@ async function fetchItems() {
 
   // Fetch latest 25 music items
   const musicItems = await collection.find({ type: 'music' })
-    .sort({ insertDate: -1 }) 
+    .sort({ insertDate: -1 })
     .limit(25)
     .toArray();
 
@@ -41,9 +39,9 @@ async function fetchItems() {
     .sort({ date: -1 })
     .limit(30)
     .toArray();
-  
-  // Combine all items
-  const allItems = [
+
+  // Combine all items into one array
+  const allItems: Item[] = [
     ...weatherAndRedditItems,
     ...newsItems,
     ...musicItems,
@@ -53,14 +51,14 @@ async function fetchItems() {
   return allItems;
 }
 
-async function getCachedItems() {
+async function getCachedItems(): Promise<Item[]> {
   const now = Date.now();
-  // Return cached items if they're still valid
+  // If cache exists and hasn't expired, return it.
   if (cachedItems && (now - cachedAt) < CACHE_DURATION) {
     console.log("Returning cached items.");
     return cachedItems;
   }
-  
+
   console.log("Cache expired or not set; fetching new items.");
   const newItems = await fetchItems();
   cachedItems = newItems;

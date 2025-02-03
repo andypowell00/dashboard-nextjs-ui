@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
-import { unstable_cache } from 'next/cache';
+
+// Cache variables at module scope
+let cachedItems: any[] | null = null;
+let cachedAt: number = 0;
+
+// Set cache duration to 24 hours (in milliseconds)
+const CACHE_DURATION = 12 * 60 * 60 * 1000; 
 
 async function fetchItems() {
   console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
@@ -12,8 +18,11 @@ async function fetchItems() {
   // Fetch weather and reddit items
   const weatherAndRedditItems = await collection.find({
     type: { $in: ['reddit', 'weather'] },
-    date: { $eq: todayString }
+    date: todayString
   }).toArray();
+
+  // Log the count for debugging
+  console.log("Weather & Reddit items count:", weatherAndRedditItems.length);
 
   // Fetch latest 25 news items
   const newsItems = await collection.find({ type: 'news' })
@@ -27,13 +36,12 @@ async function fetchItems() {
     .limit(25)
     .toArray();
 
-  // Fetch trailer items latest 30 trailers
+  // Fetch latest 30 trailer items
   const trailerItems = await collection.find({ type: 'trailer' })
-  .sort({ date: -1 })
-  .limit(30) 
-  .toArray();
+    .sort({ date: -1 })
+    .limit(30)
+    .toArray();
   
-
   // Combine all items
   const allItems = [
     ...weatherAndRedditItems,
@@ -45,13 +53,20 @@ async function fetchItems() {
   return allItems;
 }
 
-const getCachedItems = unstable_cache(
-  async () => {
-    return await fetchItems();
-  },
-  ['items-cache'],
-  { revalidate: 86400 } 
-);
+async function getCachedItems() {
+  const now = Date.now();
+  // Return cached items if they're still valid
+  if (cachedItems && (now - cachedAt) < CACHE_DURATION) {
+    console.log("Returning cached items.");
+    return cachedItems;
+  }
+  
+  console.log("Cache expired or not set; fetching new items.");
+  const newItems = await fetchItems();
+  cachedItems = newItems;
+  cachedAt = now;
+  return newItems;
+}
 
 export async function GET() {
   try {
@@ -65,4 +80,3 @@ export async function GET() {
     );
   }
 }
-

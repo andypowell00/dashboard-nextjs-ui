@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
+import { unstable_cache } from 'next/cache';
 import { Item } from '@/app/types/item';
-
-// Module-scoped cache variables using the imported Item interface.
-let cachedItems: Item[] | null = null;
-let cachedAt: number = 0;
-const CACHE_DURATION = 12 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 async function fetchItems(): Promise<Item[]> {
   console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
@@ -51,20 +47,8 @@ async function fetchItems(): Promise<Item[]> {
   return allItems;
 }
 
-async function getCachedItems(): Promise<Item[]> {
-  const now = Date.now();
-  // If cache exists and hasn't expired, return it.
-  if (cachedItems && (now - cachedAt) < CACHE_DURATION) {
-    console.log("Returning cached items.");
-    return cachedItems;
-  }
+const getCachedItems = unstable_cache(fetchItems, ['items-cache'], { revalidate: 12600 }); 
 
-  console.log("Cache expired or not set; fetching new items.");
-  const newItems = await fetchItems();
-  cachedItems = newItems;
-  cachedAt = now;
-  return newItems;
-}
 
 export async function GET() {
   try {

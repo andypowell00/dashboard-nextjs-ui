@@ -3,6 +3,8 @@ import { connectToDatabase } from '@/lib/db';
 import { unstable_cache } from 'next/cache';
 import { Item } from '@/app/types/item';
 
+const CACHE_TIMER = Number(process.env.CACHE_TIMER) || 28880;
+
 async function fetchItems(): Promise<Item[]> {
   console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
   const db = await connectToDatabase();
@@ -47,7 +49,7 @@ async function fetchItems(): Promise<Item[]> {
   return allItems;
 }
 
-const getCachedItems = unstable_cache(fetchItems, ['items-cache'], { revalidate: 12600 }); 
+const getCachedItems = unstable_cache(fetchItems, ['items-cache'], { revalidate: CACHE_TIMER });
 
 
 export async function GET() {

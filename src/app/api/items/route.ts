@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
-import { unstable_cache } from 'next/cache';
 import { Item } from '@/app/types/item';
+import redis from '@/lib/redis'; 
 
-const CACHE_TIMER = Number(process.env.CACHE_TIMER) || 28880;
+const CACHE_TIMER = Number(process.env.CACHE_TIMER) || 28800; // Cache expiration in seconds
 
-async function fetchItems(): Promise<Item[]> {
+async function fetchItemsFromDB(): Promise<Item[]> {
   console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
   const db = await connectToDatabase();
 
-  // Specify the type of documents in the collection with the generic.
   const collection = db.collection<Item>(process.env.DB_CONTAINER_NAME as string);
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
@@ -17,7 +16,7 @@ async function fetchItems(): Promise<Item[]> {
   // Fetch weather and reddit items for today
   const weatherAndRedditItems = await collection.find({
     type: { $in: ['reddit', 'weather'] },
-    date: todayString
+    date: todayString,
   }).toArray();
 
   // Fetch latest 25 news items
@@ -39,27 +38,47 @@ async function fetchItems(): Promise<Item[]> {
     .toArray();
 
   // Combine all items into one array
-  const allItems: Item[] = [
-    ...weatherAndRedditItems,
-    ...newsItems,
-    ...musicItems,
-    ...trailerItems
-  ];
-
-  return allItems;
+  return [...weatherAndRedditItems, ...newsItems, ...musicItems, ...trailerItems];
 }
 
-const getCachedItems = unstable_cache(fetchItems, ['items-cache'], { revalidate: CACHE_TIMER });
+// Check cache first, if not found, fetch from DB and cache
+async function fetchItems(): Promise<Item[]> {
+  const cacheKey = process.env.CACHE_KEY ?? 'all-items-cache';
 
+  try {
+
+    // Ensure Redis is connected
+    if (!redis.isOpen) {
+      await redis.connect();
+    }
+    
+    // Try to get the cached data from Redis
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+      console.warn(`[${new Date().toISOString()}] Fetching from Redis...`);
+      return JSON.parse(cachedData);
+    }
+
+    // If no cache is found, fetch from DB and cache the result
+    const items = await fetchItemsFromDB();
+    await redis.setEx(cacheKey, CACHE_TIMER, JSON.stringify(items)); // Set cache with expiration
+
+    return items;
+  } catch (error) {
+    console.error('Redis error:', error);
+    return fetchItemsFromDB(); // Fallback to DB if Redis fails
+  }
+}
 
 export async function GET() {
   try {
-    const items = await getCachedItems();
+    const items = await fetchItems();
     return NextResponse.json(items);
   } catch (error: unknown) {
-    console.error("Error fetching items:", error);
+    console.error('Error fetching items:', error);
     return NextResponse.json(
-      { error: "An unexpected error occurred. Please try again later." },
+      { error: 'An unexpected error occurred. Please try again later.' },
       { status: 500 }
     );
   }

@@ -9,8 +9,8 @@
   --primary: #4F46E5;
   --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #FB7185 100%);
   --secondary-gradient: linear-gradient(135deg, #FB7185 0%, #4F46E5 100%);
-  --accent-1: #FB7185;
-  --accent-2: #4F46E5;
+  --accent-1: #60A5FA;
+  --accent-2: #1E40AF;
   --text-primary: #FFFFFF;
   --text-secondary: #94A3B8;
 }
@@ -44,4 +44,3 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
-

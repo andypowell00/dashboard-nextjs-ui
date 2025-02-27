@@ -37,7 +37,6 @@ const MusicCard: React.FC<MusicCardProps> = ({ item }) => {
             {item.title}
           </a>
         </h3>
-        <p className="text-sm text-[var(--text-secondary)] mb-1 line-clamp-2">{item.description}</p>
       </div>
     </div>
   )

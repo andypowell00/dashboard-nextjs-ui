@@ -11,7 +11,9 @@ async function fetchItemsFromDB(): Promise<Item[]> {
 
   const collection = db.collection<Item>(process.env.DB_CONTAINER_NAME as string);
   const today = new Date();
-  const todayString = today.toISOString().split('T')[0];
+  const estOffset = -5 * 60; // EST offset in minutes
+  const estDate = new Date(today.getTime() + estOffset * 60 * 1000);
+  const todayString = estDate.toISOString().split('T')[0];
 
   // Fetch weather and reddit items for today
   const weatherAndRedditItems = await collection.find({

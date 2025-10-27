@@ -38,7 +38,7 @@ export function DashboardTabs({ items, isLoading }: DashboardTabsProps) {
     )
   }
 
-  const tabs = ["news","reddit", "trailers", "music"]
+  const tabs = ["news", "trailers", "music"]
 
   return (
     <div className="w-full">

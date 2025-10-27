@@ -1,14 +1,18 @@
-version: '3.8'
+version: "3.8"
+
 services:
   nextjs-app:
     build:
-      context: .  # Build the image from the current directory (ap-dashboard)
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"  # Map port 3001 to the host
+      - "3001:3000" # localhost:3001 → container:3000
     volumes:
-      - .:/app  # Map the entire project to /app
-      - /app/.next  # Explicitly map the .next directory to avoid permission issues
+      - .:/app
+      - /app/node_modules # prevent overwriting node_modules
     environment:
       - NODE_ENV=development
-    user: "1000:1000"  # Ensure the container runs as user 1000
+      - CHOKIDAR_USEPOLLING=true
+      - NEXT_WEBPACK_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: npm run dev

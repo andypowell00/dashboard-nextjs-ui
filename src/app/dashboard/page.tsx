@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react'
 import { DashboardTabs } from '@/app/components/tabs'
 import WeatherDisplay from '@/app/components/weather-display'
-import { Item } from '@/app/types/item';
+import { BaseItem } from '@/app/types/item';
 
 
 
 export default function Dashboard() {
-  const [items, setItems] = useState<Item[]>([])
+  const [items, setItems] = useState<BaseItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [weatherData, setWeatherData] = useState<Item | null>(null)
+  const [weatherData, setWeatherData] = useState<BaseItem | null>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -18,9 +18,9 @@ export default function Dashboard() {
         const response = await fetch('/api/items')
         if (response.ok) {
           const data = await response.json()
-          const weatherItem = data.find((item: Item) => item.type === 'weather');
+          const weatherItem = data.find((item: BaseItem) => item.type === 'weather');
           setWeatherData(weatherItem || null)
-          setItems(data.filter((item: Item) => item.type !== 'weather'));
+          setItems(data.filter((item: BaseItem) => item.type !== 'weather'));
         } else {
           console.error(`Failed to fetch items. Status: ${response.status}`)
           setItems([])

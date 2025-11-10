@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState } from 'react'
-import Card from '@/app/components/card'
+import NewsCard from '@/app/components/news-card'
 import MusicCard from '@/app/components/music-card'
 import MovieCard from '@/app/components/movie-card'
-import { Item } from '@/app/types/item';
+import { BaseItem } from '@/app/types/item';
 
 interface DashboardTabsProps {
-  items: Item[]
+  items: BaseItem[]
   isLoading: boolean
 }
 
@@ -31,7 +31,7 @@ export function DashboardTabs({ items, isLoading }: DashboardTabsProps) {
             case 'trailer':
               return <MovieCard key={item._id?.$oid || index} item={item} />
             default:
-              return <Card key={item._id?.$oid || index} item={item} />
+              return <NewsCard key={item._id?.$oid || index} item={item} />
           }
         })}
       </div>

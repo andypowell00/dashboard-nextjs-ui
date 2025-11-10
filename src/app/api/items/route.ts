@@ -16,8 +16,8 @@ async function fetchItemsFromDB(): Promise<Item[]> {
   const todayString = estDate.toISOString().split('T')[0];
 
   // Fetch weather and reddit items for today
-  const weatherAndRedditItems = await collection.find({
-    type: { $in: ['reddit', 'weather'] },
+  const weatherItems = await collection.find({
+    type: 'weather',
     date: todayString,
   }).toArray();
 
@@ -40,7 +40,7 @@ async function fetchItemsFromDB(): Promise<Item[]> {
     .toArray();
 
   // Combine all items into one array
-  return [...weatherAndRedditItems, ...newsItems, ...musicItems, ...trailerItems];
+  return [...weatherItems, ...newsItems, ...musicItems, ...trailerItems];
 }
 
 // Check cache first, if not found, fetch from DB and cache

@@ -41,11 +41,6 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
             {item.title}
           </a>
         </h3>
-        {item.summary && (
-          <p className="text-sm text-muted-foreground line-clamp-3">
-            {item.summary}
-          </p>
-        )}
       </div>
     </div>
   );

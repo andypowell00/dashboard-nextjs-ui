@@ -1,6 +1,6 @@
 import React from 'react'
 import { Film } from 'lucide-react'
-import { MovieItem } from '@/types/movie'
+import { MovieItem } from '@/app/types/movie'
 
 interface MovieCardProps {
   item: MovieItem

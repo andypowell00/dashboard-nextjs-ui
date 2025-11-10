@@ -1,6 +1,6 @@
 import React from 'react';
 import { Music } from 'lucide-react';
-import { MusicItem } from '@/types/music';
+import { MusicItem } from '@/app/types/music';
 
 
 interface MusicCardProps {

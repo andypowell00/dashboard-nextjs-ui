@@ -44,7 +44,7 @@ async function fetchItemsFromDB(): Promise<BaseItem[]> {
 }
 
 // Check cache first, if not found, fetch from DB and cache
-async function fetchItems(): Promise<Item[]> {
+async function fetchItems(): Promise<BaseItem[]> {
   const cacheKey = process.env.CACHE_KEY ?? 'all-items-cache';
 
   try {

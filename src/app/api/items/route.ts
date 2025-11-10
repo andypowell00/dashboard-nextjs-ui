@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
-import { Item } from '@/app/types/item';
+import { BaseItem } from '@/app/types/item';
 import redis from '@/lib/redis'; 
 
 const CACHE_TIMER = Number(process.env.CACHE_TIMER) || 28800; // Cache expiration in seconds
 
-async function fetchItemsFromDB(): Promise<Item[]> {
+async function fetchItemsFromDB(): Promise<BaseItem[]> {
   console.warn(`[${new Date().toISOString()}] Fetching from DB...`);
   const db = await connectToDatabase();
 
-  const collection = db.collection<Item>(process.env.DB_CONTAINER_NAME as string);
+  const collection = db.collection<BaseItem>(process.env.DB_CONTAINER_NAME as string);
   const today = new Date();
   const estOffset = -5 * 60; // EST offset in minutes
   const estDate = new Date(today.getTime() + estOffset * 60 * 1000);

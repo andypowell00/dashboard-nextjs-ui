@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Newspaper } from 'lucide-react';
-import { NewsItem } from '@/app/types/newsItem';
+import { NewsItem } from '@/app/types/news';
 
 interface NewsCardProps {
   item: NewsItem;

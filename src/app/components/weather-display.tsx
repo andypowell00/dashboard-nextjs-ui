@@ -1,14 +1,10 @@
 import React from 'react'
 import { Sun, Cloud, CloudRain, Snowflake } from 'lucide-react'
 import { parseISO, format } from 'date-fns'
+import { WeatherItem } from '@/app/types/weather'
 
 interface WeatherProps {
-  weather: {
-    date?: string
-    high_temp?: number
-    low_temp?: number
-    status?: string
-  }
+  weather: WeatherItem
 }
 
 const WeatherDisplay: React.FC<WeatherProps> = ({ weather }) => {

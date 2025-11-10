@@ -1,14 +1,7 @@
 import React from 'react';
 import { Music } from 'lucide-react';
+import { MusicItem } from '@/types/music';
 
-interface MusicItem {
-  thumbnail?: string
-  title: string
-  description?: string
-  date?: string
-  type: string
-  url?: string
-}
 
 interface MusicCardProps {
   item: MusicItem;
